@@ -6,7 +6,7 @@ const routes = [
     path: '/',
     name: 'Seckill',
     component: () => import('@/views/SeckillPage.vue'),
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: false }
   },
   {
     path: '/admin',
