@@ -21,6 +21,11 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        String requestURI = request.getRequestURI();
+        if (requestURI.equals("/api/seckill/products") || requestURI.startsWith("/api/seckill/products/")) {
+            return true;
+        }
+
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);

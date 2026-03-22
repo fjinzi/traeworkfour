@@ -22,12 +22,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/api/admin/**")
                 .excludePathPatterns("/api/auth/**");
 
-        registry.addInterceptor(adminInterceptor)
-                .addPathPatterns("/api/seckill/**")
-                .excludePathPatterns("/api/auth/**");
-
         registry.addInterceptor(authInterceptor)
-                .addPathPatterns("/api/seckill/execute/**", "/api/seckill/*/execute/**")
-                .excludePathPatterns("/api/auth/**", "/api/seckill/init/**", "/api/seckill/stock/**", "/api/seckill/cache/**");
+                .addPathPatterns("/api/seckill/execute/**", "/api/seckill/*")
+                .excludePathPatterns("/api/auth/**");
     }
 }
