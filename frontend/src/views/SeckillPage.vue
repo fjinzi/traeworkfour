@@ -47,8 +47,13 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { seckillApi } from '@/api/product'
+import { useUserStore } from '@/store/user'
 import type { SeckillProduct } from '@/types/product'
+
+const router = useRouter()
+const userStore = useUserStore()
 
 const loading = ref(false)
 const error = ref('')
@@ -129,6 +134,14 @@ const fetchProducts = async () => {
 }
 
 const handleSeckill = async (productId: number) => {
+  if (!userStore.isLoggedIn) {
+    showMessage('请先登录后再购买', 'error')
+    setTimeout(() => {
+      router.push('/login')
+    }, 1500)
+    return
+  }
+
   try {
     const result = await seckillApi.executeSeckill(productId)
     if (result.success) {
