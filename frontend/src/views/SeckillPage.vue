@@ -47,8 +47,13 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { seckillApi } from '@/api/product'
+import { useUserStore } from '@/store/user'
 import type { SeckillProduct } from '@/types/product'
+
+const router = useRouter()
+const userStore = useUserStore()
 
 const loading = ref(false)
 const error = ref('')
@@ -101,10 +106,11 @@ const getStatusClass = (status: number) => {
 }
 
 const canSeckill = (product: SeckillProduct) => {
-  return product.status === 1 && product.stock > 0
+  return userStore.isLoggedIn && product.status === 1 && product.stock > 0
 }
 
 const getButtonText = (product: SeckillProduct) => {
+  if (!userStore.isLoggedIn) return '请先登录'
   if (product.status === 0) return '未开始'
   if (product.status === 2 || product.status === 3) return '已结束'
   if (product.stock <= 0) return '已售罄'
@@ -129,6 +135,14 @@ const fetchProducts = async () => {
 }
 
 const handleSeckill = async (productId: number) => {
+  if (!userStore.isLoggedIn) {
+    showMessage('请先登录后再购买', 'error')
+    setTimeout(() => {
+      router.push('/auth')
+    }, 1500)
+    return
+  }
+
   try {
     const result = await seckillApi.executeSeckill(productId)
     if (result.success) {

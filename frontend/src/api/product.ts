@@ -89,7 +89,7 @@ export const seckillApi = {
   },
 
   executeSeckill: async (productId: number): Promise<Result<void>> => {
-    const response = await api.post(`/seckill/${productId}`)
+    const response = await api.post(`/seckill/execute/${productId}`)
     return response.data
   }
 }

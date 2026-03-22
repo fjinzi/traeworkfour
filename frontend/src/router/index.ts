@@ -6,7 +6,7 @@ const routes = [
     path: '/',
     name: 'Seckill',
     component: () => import('@/views/SeckillPage.vue'),
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: false }
   },
   {
     path: '/admin',
@@ -15,10 +15,14 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/login',
-    name: 'Login',
+    path: '/auth',
+    name: 'Auth',
     component: () => import('@/views/AuthPage.vue'),
     meta: { requiresAuth: false }
+  },
+  {
+    path: '/login',
+    redirect: '/auth'
   }
 ]
 
@@ -36,12 +40,12 @@ router.beforeEach(async (to, from, next) => {
 
   if (to.meta.requiresAuth) {
     if (!userStore.isLoggedIn) {
-      next({ name: 'Login', query: { redirect: to.fullPath } })
+      next({ name: 'Auth', query: { redirect: to.fullPath } })
       return
     }
   }
 
-  if (to.name === 'Login' && userStore.isLoggedIn) {
+  if (to.name === 'Auth' && userStore.isLoggedIn) {
     next({ name: 'Seckill' })
     return
   }

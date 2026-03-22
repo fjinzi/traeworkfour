@@ -2,6 +2,7 @@ package com.seckill.controller;
 
 import com.seckill.entity.SeckillProduct;
 import com.seckill.service.SeckillProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -31,9 +32,15 @@ public class SeckillController {
     private SeckillProductService productService;
 
     @PostMapping("/execute/{productId}")
-    public ResponseEntity<Map<String, Object>> seckill(@PathVariable String productId) {
+    public ResponseEntity<Map<String, Object>> seckill(@PathVariable String productId, HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>();
-        Long userId = 1L;
+        Long userId = (Long) request.getAttribute("userId");
+        
+        if (userId == null) {
+            result.put("success", false);
+            result.put("message", "未登录，请先登录");
+            return ResponseEntity.ok(result);
+        }
 
         try {
             Object productObj = redisTemplate.opsForValue().get("seckill:product:" + productId);
@@ -292,7 +299,7 @@ public class SeckillController {
     }
 
     @PostMapping("/{productId}")
-    public ResponseEntity<Map<String, Object>> seckillProduct(@PathVariable String productId) {
-        return seckill(productId);
+    public ResponseEntity<Map<String, Object>> seckillProduct(@PathVariable String productId, HttpServletRequest request) {
+        return seckill(productId, request);
     }
 }
