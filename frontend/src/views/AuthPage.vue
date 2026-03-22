@@ -115,6 +115,7 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
+import { authApi } from '@/api/auth'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -235,8 +236,6 @@ const handleRegister = async () => {
     loading.value = false
   }
 }
-
-import { authApi } from '@/api/auth'
 </script>
 
 <style scoped>
