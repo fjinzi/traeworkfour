@@ -27,7 +27,7 @@ public class User implements Serializable {
     
     private String phone;
     
-    @TableField("role")
+    @TableField("role_type")
     private Integer roleType;
     
     @TableField("create_time")
